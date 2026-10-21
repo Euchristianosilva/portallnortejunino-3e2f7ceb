@@ -725,6 +725,7 @@ export type Database = {
           project: string
           results_visibility: Database["public"]["Enums"]["results_visibility"]
           rules: string
+          single_vote: boolean
           starts_at: string | null
           status: Database["public"]["Enums"]["poll_status"]
           title: string
@@ -744,6 +745,7 @@ export type Database = {
           project?: string
           results_visibility?: Database["public"]["Enums"]["results_visibility"]
           rules?: string
+          single_vote?: boolean
           starts_at?: string | null
           status?: Database["public"]["Enums"]["poll_status"]
           title: string
@@ -763,6 +765,7 @@ export type Database = {
           project?: string
           results_visibility?: Database["public"]["Enums"]["results_visibility"]
           rules?: string
+          single_vote?: boolean
           starts_at?: string | null
           status?: Database["public"]["Enums"]["poll_status"]
           title?: string
