@@ -12,6 +12,7 @@ import { useAuth } from "@/lib/auth";
 import { POLL_STATUS, VISIBILITY, effectivePollStatus, fmtDate, percent, errMsg } from "@/lib/format";
 import imgVote from "@/assets/card-votacao.jpg";
 import { StoredImage } from "@/components/site/StoredImage";
+import { PollRanking } from "@/components/site/PollRanking";
 
 export const Route = createFileRoute("/votacoes/$id")({
   head: () => ({
@@ -187,7 +188,12 @@ function PollPage() {
         </div>
       </section>
 
+      {eff === "encerrada" && (tally.data?.tallies.length ?? 0) > 0 && (
+        <PollRanking options={(p.poll_options ?? []).map((o) => ({ ...o, votes: counts.get(o.id) ?? 0 }))} />
+      )}
+
       {/* Participantes */}
+      {!(eff === "encerrada" && (tally.data?.tallies.length ?? 0) > 0) && (
       <section className="theme-light">
         <div className="mx-auto max-w-7xl px-5 py-12">
           <div className="flex flex-wrap items-end justify-between gap-4">
@@ -276,7 +282,7 @@ function PollPage() {
                       {showResults && (
                         <div className="mt-3">
                           <div className="flex justify-between text-xs font-semibold">
-                            <span>{c} voto(s)</span>
+                            <span>{c} voto(s){eff === "ativa" && <span className="ml-1 font-normal text-muted-foreground">· parcial</span>}</span>
                             <span>{percent(c, total)}%</span>
                           </div>
                           <div className="mt-1 h-2 overflow-hidden rounded-full bg-muted">
@@ -348,6 +354,7 @@ function PollPage() {
           )}
         </div>
       </section>
+      )}
     </SiteShell>
   );
 }
