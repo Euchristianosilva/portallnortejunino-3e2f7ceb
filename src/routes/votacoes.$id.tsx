@@ -69,7 +69,7 @@ function PollPage() {
       return data as number;
     },
     onSuccess: (left) => {
-      toast.success(left > 0 ? `Voto registrado! Você ainda tem ${left} voto(s).` : "Voto registrado com sucesso!");
+      toast.success(left < 0 ? "Voto registrado! Você pode votar novamente quando quiser." : "Voto registrado com sucesso!");
       setSelected([]);
       qc.invalidateQueries({ queryKey: ["myvotes", id] });
       qc.invalidateQueries({ queryKey: ["tally", id] });
@@ -113,15 +113,16 @@ function PollPage() {
   const showResults = (tally.data?.tallies.length ?? 0) > 0 || (p.results_visibility === "ao_vivo" && eff !== "rascunho");
   const total = [...counts.values()].reduce((a, b) => a + b, 0);
   const used = mine.data?.length ?? 0;
-  const left = Math.max(0, p.votes_per_user - used);
+  const single = p.single_vote;
+  const canVoteMore = !single || used === 0;
   const votedIds = new Set(mine.data?.map((v) => v.option_id));
   const open = eff === "ativa";
 
   function pick(oid: string) {
     setSelected((s) => {
       if (s.includes(oid)) return s.filter((x) => x !== oid);
-      if (p!.votes_per_user === 1) return [oid];
-      return s.length < left ? [...s, oid] : s;
+      if (single) return [oid];
+      return [...s, oid];
     });
   }
 
@@ -205,9 +206,13 @@ function PollPage() {
             </label>
           </div>
 
-          {user && open && p.votes_per_user > 1 && (
-            <p className="mt-4 text-sm text-muted-foreground">
-              Você usou {used} de {p.votes_per_user} voto(s).
+          {user && open && (
+            <p className="mt-4 rounded-lg border border-border bg-card px-4 py-3 text-sm text-muted-foreground">
+              {single
+                ? used > 0
+                  ? "Seu voto já foi registrado. Nesta votação cada participante vota apenas uma vez."
+                  : "Voto único: você poderá registrar apenas um voto nesta votação."
+                : `Votos ilimitados: vote quantas vezes quiser, inclusive no mesmo candidato.${used > 0 ? ` Você já registrou ${used} voto(s).` : ""}`}
             </p>
           )}
 
@@ -226,7 +231,7 @@ function PollPage() {
                 const c = counts.get(o.id) ?? 0;
                 const sel = selected.includes(o.id);
                 const already = votedIds.has(o.id);
-                const canPick = open && !!user && left > 0 && (!already || p.allow_repeat_option);
+                const canPick = open && !!user && canVoteMore;
                 return (
                   <article
                     key={o.id}
@@ -244,7 +249,7 @@ function PollPage() {
                       <span className="absolute left-3 top-3 flex size-7 items-center justify-center rounded-full bg-navy-deep text-xs font-extrabold text-primary-foreground shadow">
                         {idx}
                       </span>
-                      {(sel || already) && (
+                      {(sel || (already && single)) && (
                         <span className="absolute right-3 top-3 flex size-7 items-center justify-center rounded-full bg-primary text-primary-foreground shadow">
                           <Check className="size-4" />
                         </span>
@@ -283,14 +288,18 @@ function PollPage() {
                         <Button
                           type="button"
                           className="w-full"
-                          variant={already && !p.allow_repeat_option ? "outline" : "default"}
+                          variant={already && single ? "outline" : "default"}
                           disabled={!canPick}
                           onClick={() => pick(o.id)}
                         >
-                          {already && !p.allow_repeat_option ? (
+                          {already && single ? (
                             <>
                               <Check /> Voto registrado
                             </>
+                          ) : sel && !single ? (
+                            "Remover seleção"
+                          ) : already ? (
+                            "Votar novamente"
                           ) : (
                             "Votar neste candidato"
                           )}
@@ -317,7 +326,7 @@ function PollPage() {
 
           {open && user && (
             <div className="sticky mt-8 flex justify-end" style={{ bottom: "calc(1rem + env(safe-area-inset-bottom))" }}>
-              <Button variant="hero" size="xl" disabled={!selected.length || vote.isPending} onClick={() => vote.mutate(selected)}>
+              <Button variant="hero" size="xl" disabled={!selected.length || !canVoteMore || vote.isPending} onClick={() => vote.mutate(selected)}>
                 {vote.isPending ? "Registrando…" : `Confirmar voto${selected.length > 1 ? "s" : ""}`}
               </Button>
             </div>
