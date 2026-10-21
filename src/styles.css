@@ -30,6 +30,9 @@
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-success: var(--success);
+  --color-gold: var(--gold);
+  --color-silver: var(--silver);
+  --color-bronze: var(--bronze);
   --color-warning: var(--warning);
   --color-border: var(--border);
   --color-input: var(--input);
@@ -75,6 +78,9 @@
   --destructive: oklch(0.63 0.22 25);
   --destructive-foreground: oklch(0.99 0 0);
   --success: oklch(0.7 0.16 155);
+  --gold: oklch(0.84 0.16 85);
+  --silver: oklch(0.82 0.02 255);
+  --bronze: oklch(0.68 0.13 50);
   --warning: oklch(0.8 0.15 80);
   --border: oklch(0.6 0.18 258 / 35%);
   --input: oklch(0.6 0.18 258 / 40%);
