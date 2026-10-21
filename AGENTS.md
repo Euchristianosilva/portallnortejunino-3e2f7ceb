@@ -16,6 +16,7 @@
 - Business rules (voting limits, registration validation, protocol generation, status changes) live in SECURITY DEFINER Postgres functions; the UI only calls them — so they cannot be bypassed from the browser.
 - Admin access is decided by `user_roles` + `user_permissions` via `has_role`/`has_permission`; never by e-mail or client state.
 - Live updates use `useLiveQueries` (src/lib/realtime.ts), which invalidates React Query keys and resyncs on reconnect — never poll with fixed data.
+- Poll voting mode is the single `polls.single_vote` flag enforced inside `cast_vote` under a poll row lock (single = one vote per participant; otherwise unlimited); `votes_per_user`/`allow_repeat_option` are deprecated and unused, so UI and DB cannot disagree.
 - Hidden vote totals are only readable through `poll_tallies` RLS; never expose counts elsewhere.
 - Registration tracking lookup runs in a server function with the admin client and an IP rate limit; public live status uses the PII-free `registration_live_status` table.
 - Admin edits use optimistic concurrency (`guardedUpdate` on `updated_at`).
