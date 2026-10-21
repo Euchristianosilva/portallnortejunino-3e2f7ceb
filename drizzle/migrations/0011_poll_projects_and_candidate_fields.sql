@@ -1,0 +1,2 @@
+ALTER TABLE public.polls ADD COLUMN project text NOT NULL DEFAULT '';
+ALTER TABLE public.poll_options ADD COLUMN group_name text NOT NULL DEFAULT '', ADD COLUMN state text NOT NULL DEFAULT '', ADD COLUMN city text NOT NULL DEFAULT '';

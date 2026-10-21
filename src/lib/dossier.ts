@@ -1,0 +1,20 @@
+import { fmtDate, REG_STATUS, type FormField, type RegStatus } from "@/lib/format";
+
+export interface LegalDocument { id: string; title: string; kind: "terms" | "image" | "privacy" | "other"; version: string; published_at: string; content: string; required: boolean }
+export interface Consent extends LegalDocument { accepted_at: string; agreed: boolean }
+export interface Dossier { id: string; generated_at: string; hash: string; snapshot: { protocol: string; full_name: string; email: string; title: string; category: string; created_at: string; updated_at: string; status: string; form_version: number; fields: FormField[]; answers: Record<string,string>; consents: Consent[]; original: {full_name:string;email:string;answers:Record<string,string>;title:string;category:string;created_at:string} | null } }
+export const DOSSIER_TITLE = "Dossiê de Inscrição e Termos de Participação";
+export function dossierSections(d: Dossier) {
+ const s=d.snapshot;
+ const legal=(k:string)=>s.consents.filter(c=>c.kind===k&&c.agreed).map(c=>`${c.title}\nVersão ${c.version} · Publicação/vigência: ${fmtDate(c.published_at)}\n\n${c.content}`).join("\n\n") || "Não há documento integral e aceite histórico registrado para esta seção. Nenhuma autorização é presumida.";
+ const answer=(f:FormField,answers=s.answers)=>{const v=answers[f.key]; if(!v)return "Não informado"; if(f.type==="file")return "Arquivo enviado e registrado na inscrição (anexo privado)."; if(f.type==="checkbox")return v==="true"?"Sim":"Não"; if(f.type==="multiselect"){try{return JSON.parse(v).join(", ");}catch{return v;}}return v;};
+ return [
+ {title:"Capa — Identificação da inscrição",text:`${DOSSIER_TITLE}\nProtocolo: ${s.protocol}\nParticipante: ${s.full_name}\nFormulário: ${s.title}\nCategoria: ${s.category||"Não informada"}\nEnvio: ${fmtDate(s.created_at)}\nSituação: ${REG_STATUS[s.status as RegStatus]??s.status}\nVersão do formulário: ${s.form_version}\nVersão do relatório: ${d.id}`},
+ {title:"1 — Ficha de inscrição",text:`Nome completo: ${s.full_name}\nE-mail: ${s.email}\n\n${s.fields.map(f=>`${f.label}\n${answer(f)}`).join("\n\n")}\n\nDados consultados em: ${fmtDate(s.updated_at)}${s.original?`\n\nDados originais do envio\nNome: ${s.original.full_name}\nE-mail: ${s.original.email}\n${s.fields.map(f=>`${f.label}: ${answer(f,s.original?.answers??{})}`).join("\n")}`:"\nO sistema não possui uma cópia histórica original separada para esta inscrição."}`},
+ {title:"2 — Regulamento e termos de participação",text:legal("terms")},
+ {title:"3 — Autorização de uso de imagem e voz",text:legal("image")},
+ {title:"4 — Política de privacidade e demais documentos obrigatórios",text:[legal("privacy"),...s.consents.filter(c=>c.kind==="other"&&c.agreed).map(c=>`${c.title}\nVersão ${c.version}\n\n${c.content}`)].join("\n\n")},
+ {title:"5 — Registro dos aceites",text:s.consents.length?s.consents.map(c=>`${c.title}\nVersão: ${c.version}\nPublicação/vigência: ${fmtDate(c.published_at)}\nAceite: ${fmtDate(c.accepted_at)}\nConcordância expressa: ${c.agreed?"Sim":"Não"}\nProtocolo: ${s.protocol}\nEstado: ${c.agreed?"Registrado":"Não concedido"}`).join("\n\n"):"Não existem registros históricos individualizados de consentimento. Este relatório não presume aceites nem comprova leitura ou compreensão."},
+ {title:"6 — Declaração final e autenticidade",text:`Este relatório reúne os dados da inscrição e as versões dos documentos registrados no sistema na data da geração. Não constitui nova inscrição, autorização ou aceite.\n\nProtocolo: ${s.protocol}\nGerado em: ${fmtDate(d.generated_at)}\nIdentificador: ${d.id}\nIntegridade SHA-256: ${d.hash}\nO identificador e o hash vinculam esta cópia ao registro mantido no sistema; não constituem assinatura digital qualificada nem certificação jurídica.\nCanal oficial de contato: página Contato do Portal Norte Junino.\nGuarde o arquivo e o protocolo.`}
+ ];
+}

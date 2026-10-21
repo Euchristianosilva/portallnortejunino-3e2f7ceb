@@ -10,33 +10,502 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AcompanharRouteImport } from './routes/acompanhar'
+import { Route as AgendaRouteImport } from './routes/agenda'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ComunicadosRouteImport } from './routes/comunicados'
+import { Route as ContatoRouteImport } from './routes/contato'
+import { Route as DocumentoRouteImport } from './routes/documento'
+import { Route as InscricoesRouteImport } from './routes/inscricoes'
+import { Route as PrivacidadeRouteImport } from './routes/privacidade'
+import { Route as RegulamentosRouteImport } from './routes/regulamentos'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as SobreRouteImport } from './routes/sobre'
+import { Route as VotacoesRouteImport } from './routes/votacoes'
+import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
+import { Route as DesligamentoTokenRouteImport } from './routes/desligamento.$token'
+import { Route as InscricoesIndexRouteImport } from './routes/inscricoes.index'
+import { Route as InscricoesIdRouteImport } from './routes/inscricoes.$id'
+import { Route as VagasIndexRouteImport } from './routes/vagas.index'
+import { Route as VagasIdRouteImport } from './routes/vagas.$id'
+import { Route as VotacoesIndexRouteImport } from './routes/votacoes.index'
+import { Route as VotacoesIdRouteImport } from './routes/votacoes.$id'
+import { Route as AuthenticatedPainelIndexRouteImport } from './routes/_authenticated/painel.index'
+import { Route as AuthenticatedPainelAgendaRouteImport } from './routes/_authenticated/painel.agenda'
+import { Route as AuthenticatedPainelAuditoriaRouteImport } from './routes/_authenticated/painel.auditoria'
+import { Route as AuthenticatedPainelComunicadosRouteImport } from './routes/_authenticated/painel.comunicados'
+import { Route as AuthenticatedPainelDesligamentosRouteImport } from './routes/_authenticated/painel.desligamentos'
+import { Route as AuthenticatedPainelEquipeRouteImport } from './routes/_authenticated/painel.equipe'
+import { Route as AuthenticatedPainelFormulariosRouteImport } from './routes/_authenticated/painel.formularios'
+import { Route as AuthenticatedPainelInscricoesRouteImport } from './routes/_authenticated/painel.inscricoes'
+import { Route as AuthenticatedPainelMensagensRouteImport } from './routes/_authenticated/painel.mensagens'
+import { Route as AuthenticatedPainelPermissoesRouteImport } from './routes/_authenticated/painel.permissoes'
+import { Route as AuthenticatedPainelRelatoriosRouteImport } from './routes/_authenticated/painel.relatorios'
+import { Route as AuthenticatedPainelTermosRouteImport } from './routes/_authenticated/painel.termos'
+import { Route as AuthenticatedPainelVagasRouteImport } from './routes/_authenticated/painel.vagas'
+import { Route as AuthenticatedPainelVotacoesRouteImport } from './routes/_authenticated/painel.votacoes'
+import { Route as VagasIdCandidaturaRouteImport } from './routes/vagas.$id_.candidatura'
+import { Route as VagasIdTermosRouteImport } from './routes/vagas.$id_.termos'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AcompanharRoute = AcompanharRouteImport.update({
+  id: '/acompanhar',
+  path: '/acompanhar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AgendaRoute = AgendaRouteImport.update({
+  id: '/agenda',
+  path: '/agenda',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ComunicadosRoute = ComunicadosRouteImport.update({
+  id: '/comunicados',
+  path: '/comunicados',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContatoRoute = ContatoRouteImport.update({
+  id: '/contato',
+  path: '/contato',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DocumentoRoute = DocumentoRouteImport.update({
+  id: '/documento',
+  path: '/documento',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InscricoesRoute = InscricoesRouteImport.update({
+  id: '/inscricoes',
+  path: '/inscricoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacidadeRoute = PrivacidadeRouteImport.update({
+  id: '/privacidade',
+  path: '/privacidade',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegulamentosRoute = RegulamentosRouteImport.update({
+  id: '/regulamentos',
+  path: '/regulamentos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SobreRoute = SobreRouteImport.update({
+  id: '/sobre',
+  path: '/sobre',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VotacoesRoute = VotacoesRouteImport.update({
+  id: '/votacoes',
+  path: '/votacoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedPainelRoute = AuthenticatedPainelRouteImport.update({
+  id: '/painel',
+  path: '/painel',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const DesligamentoTokenRoute = DesligamentoTokenRouteImport.update({
+  id: '/desligamento/$token',
+  path: '/desligamento/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InscricoesIndexRoute = InscricoesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => InscricoesRoute,
+} as any)
+const InscricoesIdRoute = InscricoesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => InscricoesRoute,
+} as any)
+const VagasIndexRoute = VagasIndexRouteImport.update({
+  id: '/vagas/',
+  path: '/vagas/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VagasIdRoute = VagasIdRouteImport.update({
+  id: '/vagas/$id',
+  path: '/vagas/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VotacoesIndexRoute = VotacoesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => VotacoesRoute,
+} as any)
+const VotacoesIdRoute = VotacoesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => VotacoesRoute,
+} as any)
+const AuthenticatedPainelIndexRoute =
+  AuthenticatedPainelIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedPainelRoute,
+  } as any)
+const AuthenticatedPainelAgendaRoute =
+  AuthenticatedPainelAgendaRouteImport.update({
+    id: '/agenda',
+    path: '/agenda',
+    getParentRoute: () => AuthenticatedPainelRoute,
+  } as any)
+const AuthenticatedPainelAuditoriaRoute =
+  AuthenticatedPainelAuditoriaRouteImport.update({
+    id: '/auditoria',
+    path: '/auditoria',
+    getParentRoute: () => AuthenticatedPainelRoute,
+  } as any)
+const AuthenticatedPainelComunicadosRoute =
+  AuthenticatedPainelComunicadosRouteImport.update({
+    id: '/comunicados',
+    path: '/comunicados',
+    getParentRoute: () => AuthenticatedPainelRoute,
+  } as any)
+const AuthenticatedPainelDesligamentosRoute =
+  AuthenticatedPainelDesligamentosRouteImport.update({
+    id: '/desligamentos',
+    path: '/desligamentos',
+    getParentRoute: () => AuthenticatedPainelRoute,
+  } as any)
+const AuthenticatedPainelEquipeRoute =
+  AuthenticatedPainelEquipeRouteImport.update({
+    id: '/equipe',
+    path: '/equipe',
+    getParentRoute: () => AuthenticatedPainelRoute,
+  } as any)
+const AuthenticatedPainelFormulariosRoute =
+  AuthenticatedPainelFormulariosRouteImport.update({
+    id: '/formularios',
+    path: '/formularios',
+    getParentRoute: () => AuthenticatedPainelRoute,
+  } as any)
+const AuthenticatedPainelInscricoesRoute =
+  AuthenticatedPainelInscricoesRouteImport.update({
+    id: '/inscricoes',
+    path: '/inscricoes',
+    getParentRoute: () => AuthenticatedPainelRoute,
+  } as any)
+const AuthenticatedPainelMensagensRoute =
+  AuthenticatedPainelMensagensRouteImport.update({
+    id: '/mensagens',
+    path: '/mensagens',
+    getParentRoute: () => AuthenticatedPainelRoute,
+  } as any)
+const AuthenticatedPainelPermissoesRoute =
+  AuthenticatedPainelPermissoesRouteImport.update({
+    id: '/permissoes',
+    path: '/permissoes',
+    getParentRoute: () => AuthenticatedPainelRoute,
+  } as any)
+const AuthenticatedPainelRelatoriosRoute =
+  AuthenticatedPainelRelatoriosRouteImport.update({
+    id: '/relatorios',
+    path: '/relatorios',
+    getParentRoute: () => AuthenticatedPainelRoute,
+  } as any)
+const AuthenticatedPainelTermosRoute =
+  AuthenticatedPainelTermosRouteImport.update({
+    id: '/termos',
+    path: '/termos',
+    getParentRoute: () => AuthenticatedPainelRoute,
+  } as any)
+const AuthenticatedPainelVagasRoute =
+  AuthenticatedPainelVagasRouteImport.update({
+    id: '/vagas',
+    path: '/vagas',
+    getParentRoute: () => AuthenticatedPainelRoute,
+  } as any)
+const AuthenticatedPainelVotacoesRoute =
+  AuthenticatedPainelVotacoesRouteImport.update({
+    id: '/votacoes',
+    path: '/votacoes',
+    getParentRoute: () => AuthenticatedPainelRoute,
+  } as any)
+const VagasIdCandidaturaRoute = VagasIdCandidaturaRouteImport.update({
+  id: '/vagas/$id_/candidatura',
+  path: '/vagas/$id/candidatura',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VagasIdTermosRoute = VagasIdTermosRouteImport.update({
+  id: '/vagas/$id_/termos',
+  path: '/vagas/$id/termos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/acompanhar': typeof AcompanharRoute
+  '/agenda': typeof AgendaRoute
+  '/auth': typeof AuthRoute
+  '/comunicados': typeof ComunicadosRoute
+  '/contato': typeof ContatoRoute
+  '/documento': typeof DocumentoRoute
+  '/inscricoes': typeof InscricoesRouteWithChildren
+  '/privacidade': typeof PrivacidadeRoute
+  '/regulamentos': typeof RegulamentosRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/sobre': typeof SobreRoute
+  '/votacoes': typeof VotacoesRouteWithChildren
+  '/painel': typeof AuthenticatedPainelRouteWithChildren
+  '/desligamento/$token': typeof DesligamentoTokenRoute
+  '/inscricoes/$id': typeof InscricoesIdRoute
+  '/vagas/$id': typeof VagasIdRoute
+  '/votacoes/$id': typeof VotacoesIdRoute
+  '/inscricoes/': typeof InscricoesIndexRoute
+  '/vagas/': typeof VagasIndexRoute
+  '/votacoes/': typeof VotacoesIndexRoute
+  '/painel/agenda': typeof AuthenticatedPainelAgendaRoute
+  '/painel/auditoria': typeof AuthenticatedPainelAuditoriaRoute
+  '/painel/comunicados': typeof AuthenticatedPainelComunicadosRoute
+  '/painel/desligamentos': typeof AuthenticatedPainelDesligamentosRoute
+  '/painel/equipe': typeof AuthenticatedPainelEquipeRoute
+  '/painel/formularios': typeof AuthenticatedPainelFormulariosRoute
+  '/painel/inscricoes': typeof AuthenticatedPainelInscricoesRoute
+  '/painel/mensagens': typeof AuthenticatedPainelMensagensRoute
+  '/painel/permissoes': typeof AuthenticatedPainelPermissoesRoute
+  '/painel/relatorios': typeof AuthenticatedPainelRelatoriosRoute
+  '/painel/termos': typeof AuthenticatedPainelTermosRoute
+  '/painel/vagas': typeof AuthenticatedPainelVagasRoute
+  '/painel/votacoes': typeof AuthenticatedPainelVotacoesRoute
+  '/vagas/$id/candidatura': typeof VagasIdCandidaturaRoute
+  '/vagas/$id/termos': typeof VagasIdTermosRoute
+  '/painel/': typeof AuthenticatedPainelIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/acompanhar': typeof AcompanharRoute
+  '/agenda': typeof AgendaRoute
+  '/auth': typeof AuthRoute
+  '/comunicados': typeof ComunicadosRoute
+  '/contato': typeof ContatoRoute
+  '/documento': typeof DocumentoRoute
+  '/privacidade': typeof PrivacidadeRoute
+  '/regulamentos': typeof RegulamentosRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/sobre': typeof SobreRoute
+  '/desligamento/$token': typeof DesligamentoTokenRoute
+  '/inscricoes/$id': typeof InscricoesIdRoute
+  '/vagas/$id': typeof VagasIdRoute
+  '/votacoes/$id': typeof VotacoesIdRoute
+  '/inscricoes': typeof InscricoesIndexRoute
+  '/vagas': typeof VagasIndexRoute
+  '/votacoes': typeof VotacoesIndexRoute
+  '/painel/agenda': typeof AuthenticatedPainelAgendaRoute
+  '/painel/auditoria': typeof AuthenticatedPainelAuditoriaRoute
+  '/painel/comunicados': typeof AuthenticatedPainelComunicadosRoute
+  '/painel/desligamentos': typeof AuthenticatedPainelDesligamentosRoute
+  '/painel/equipe': typeof AuthenticatedPainelEquipeRoute
+  '/painel/formularios': typeof AuthenticatedPainelFormulariosRoute
+  '/painel/inscricoes': typeof AuthenticatedPainelInscricoesRoute
+  '/painel/mensagens': typeof AuthenticatedPainelMensagensRoute
+  '/painel/permissoes': typeof AuthenticatedPainelPermissoesRoute
+  '/painel/relatorios': typeof AuthenticatedPainelRelatoriosRoute
+  '/painel/termos': typeof AuthenticatedPainelTermosRoute
+  '/painel/vagas': typeof AuthenticatedPainelVagasRoute
+  '/painel/votacoes': typeof AuthenticatedPainelVotacoesRoute
+  '/vagas/$id/candidatura': typeof VagasIdCandidaturaRoute
+  '/vagas/$id/termos': typeof VagasIdTermosRoute
+  '/painel': typeof AuthenticatedPainelIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/acompanhar': typeof AcompanharRoute
+  '/agenda': typeof AgendaRoute
+  '/auth': typeof AuthRoute
+  '/comunicados': typeof ComunicadosRoute
+  '/contato': typeof ContatoRoute
+  '/documento': typeof DocumentoRoute
+  '/inscricoes': typeof InscricoesRouteWithChildren
+  '/privacidade': typeof PrivacidadeRoute
+  '/regulamentos': typeof RegulamentosRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/sobre': typeof SobreRoute
+  '/votacoes': typeof VotacoesRouteWithChildren
+  '/_authenticated/painel': typeof AuthenticatedPainelRouteWithChildren
+  '/desligamento/$token': typeof DesligamentoTokenRoute
+  '/inscricoes/$id': typeof InscricoesIdRoute
+  '/vagas/$id': typeof VagasIdRoute
+  '/votacoes/$id': typeof VotacoesIdRoute
+  '/inscricoes/': typeof InscricoesIndexRoute
+  '/vagas/': typeof VagasIndexRoute
+  '/votacoes/': typeof VotacoesIndexRoute
+  '/_authenticated/painel/agenda': typeof AuthenticatedPainelAgendaRoute
+  '/_authenticated/painel/auditoria': typeof AuthenticatedPainelAuditoriaRoute
+  '/_authenticated/painel/comunicados': typeof AuthenticatedPainelComunicadosRoute
+  '/_authenticated/painel/desligamentos': typeof AuthenticatedPainelDesligamentosRoute
+  '/_authenticated/painel/equipe': typeof AuthenticatedPainelEquipeRoute
+  '/_authenticated/painel/formularios': typeof AuthenticatedPainelFormulariosRoute
+  '/_authenticated/painel/inscricoes': typeof AuthenticatedPainelInscricoesRoute
+  '/_authenticated/painel/mensagens': typeof AuthenticatedPainelMensagensRoute
+  '/_authenticated/painel/permissoes': typeof AuthenticatedPainelPermissoesRoute
+  '/_authenticated/painel/relatorios': typeof AuthenticatedPainelRelatoriosRoute
+  '/_authenticated/painel/termos': typeof AuthenticatedPainelTermosRoute
+  '/_authenticated/painel/vagas': typeof AuthenticatedPainelVagasRoute
+  '/_authenticated/painel/votacoes': typeof AuthenticatedPainelVotacoesRoute
+  '/vagas/$id_/candidatura': typeof VagasIdCandidaturaRoute
+  '/vagas/$id_/termos': typeof VagasIdTermosRoute
+  '/_authenticated/painel/': typeof AuthenticatedPainelIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/acompanhar'
+    | '/agenda'
+    | '/auth'
+    | '/comunicados'
+    | '/contato'
+    | '/documento'
+    | '/inscricoes'
+    | '/privacidade'
+    | '/regulamentos'
+    | '/reset-password'
+    | '/sobre'
+    | '/votacoes'
+    | '/painel'
+    | '/desligamento/$token'
+    | '/inscricoes/$id'
+    | '/vagas/$id'
+    | '/votacoes/$id'
+    | '/inscricoes/'
+    | '/vagas/'
+    | '/votacoes/'
+    | '/painel/agenda'
+    | '/painel/auditoria'
+    | '/painel/comunicados'
+    | '/painel/desligamentos'
+    | '/painel/equipe'
+    | '/painel/formularios'
+    | '/painel/inscricoes'
+    | '/painel/mensagens'
+    | '/painel/permissoes'
+    | '/painel/relatorios'
+    | '/painel/termos'
+    | '/painel/vagas'
+    | '/painel/votacoes'
+    | '/vagas/$id/candidatura'
+    | '/vagas/$id/termos'
+    | '/painel/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/acompanhar'
+    | '/agenda'
+    | '/auth'
+    | '/comunicados'
+    | '/contato'
+    | '/documento'
+    | '/privacidade'
+    | '/regulamentos'
+    | '/reset-password'
+    | '/sobre'
+    | '/desligamento/$token'
+    | '/inscricoes/$id'
+    | '/vagas/$id'
+    | '/votacoes/$id'
+    | '/inscricoes'
+    | '/vagas'
+    | '/votacoes'
+    | '/painel/agenda'
+    | '/painel/auditoria'
+    | '/painel/comunicados'
+    | '/painel/desligamentos'
+    | '/painel/equipe'
+    | '/painel/formularios'
+    | '/painel/inscricoes'
+    | '/painel/mensagens'
+    | '/painel/permissoes'
+    | '/painel/relatorios'
+    | '/painel/termos'
+    | '/painel/vagas'
+    | '/painel/votacoes'
+    | '/vagas/$id/candidatura'
+    | '/vagas/$id/termos'
+    | '/painel'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/acompanhar'
+    | '/agenda'
+    | '/auth'
+    | '/comunicados'
+    | '/contato'
+    | '/documento'
+    | '/inscricoes'
+    | '/privacidade'
+    | '/regulamentos'
+    | '/reset-password'
+    | '/sobre'
+    | '/votacoes'
+    | '/_authenticated/painel'
+    | '/desligamento/$token'
+    | '/inscricoes/$id'
+    | '/vagas/$id'
+    | '/votacoes/$id'
+    | '/inscricoes/'
+    | '/vagas/'
+    | '/votacoes/'
+    | '/_authenticated/painel/agenda'
+    | '/_authenticated/painel/auditoria'
+    | '/_authenticated/painel/comunicados'
+    | '/_authenticated/painel/desligamentos'
+    | '/_authenticated/painel/equipe'
+    | '/_authenticated/painel/formularios'
+    | '/_authenticated/painel/inscricoes'
+    | '/_authenticated/painel/mensagens'
+    | '/_authenticated/painel/permissoes'
+    | '/_authenticated/painel/relatorios'
+    | '/_authenticated/painel/termos'
+    | '/_authenticated/painel/vagas'
+    | '/_authenticated/painel/votacoes'
+    | '/vagas/$id_/candidatura'
+    | '/vagas/$id_/termos'
+    | '/_authenticated/painel/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AcompanharRoute: typeof AcompanharRoute
+  AgendaRoute: typeof AgendaRoute
+  AuthRoute: typeof AuthRoute
+  ComunicadosRoute: typeof ComunicadosRoute
+  ContatoRoute: typeof ContatoRoute
+  DocumentoRoute: typeof DocumentoRoute
+  InscricoesRoute: typeof InscricoesRouteWithChildren
+  PrivacidadeRoute: typeof PrivacidadeRoute
+  RegulamentosRoute: typeof RegulamentosRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
+  SobreRoute: typeof SobreRoute
+  VotacoesRoute: typeof VotacoesRouteWithChildren
+  DesligamentoTokenRoute: typeof DesligamentoTokenRoute
+  VagasIdRoute: typeof VagasIdRoute
+  VagasIndexRoute: typeof VagasIndexRoute
+  VagasIdCandidaturaRoute: typeof VagasIdCandidaturaRoute
+  VagasIdTermosRoute: typeof VagasIdTermosRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +517,364 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/acompanhar': {
+      id: '/acompanhar'
+      path: '/acompanhar'
+      fullPath: '/acompanhar'
+      preLoaderRoute: typeof AcompanharRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/agenda': {
+      id: '/agenda'
+      path: '/agenda'
+      fullPath: '/agenda'
+      preLoaderRoute: typeof AgendaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/comunicados': {
+      id: '/comunicados'
+      path: '/comunicados'
+      fullPath: '/comunicados'
+      preLoaderRoute: typeof ComunicadosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contato': {
+      id: '/contato'
+      path: '/contato'
+      fullPath: '/contato'
+      preLoaderRoute: typeof ContatoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/documento': {
+      id: '/documento'
+      path: '/documento'
+      fullPath: '/documento'
+      preLoaderRoute: typeof DocumentoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inscricoes': {
+      id: '/inscricoes'
+      path: '/inscricoes'
+      fullPath: '/inscricoes'
+      preLoaderRoute: typeof InscricoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacidade': {
+      id: '/privacidade'
+      path: '/privacidade'
+      fullPath: '/privacidade'
+      preLoaderRoute: typeof PrivacidadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/regulamentos': {
+      id: '/regulamentos'
+      path: '/regulamentos'
+      fullPath: '/regulamentos'
+      preLoaderRoute: typeof RegulamentosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sobre': {
+      id: '/sobre'
+      path: '/sobre'
+      fullPath: '/sobre'
+      preLoaderRoute: typeof SobreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/votacoes': {
+      id: '/votacoes'
+      path: '/votacoes'
+      fullPath: '/votacoes'
+      preLoaderRoute: typeof VotacoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/painel': {
+      id: '/_authenticated/painel'
+      path: '/painel'
+      fullPath: '/painel'
+      preLoaderRoute: typeof AuthenticatedPainelRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/desligamento/$token': {
+      id: '/desligamento/$token'
+      path: '/desligamento/$token'
+      fullPath: '/desligamento/$token'
+      preLoaderRoute: typeof DesligamentoTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inscricoes/': {
+      id: '/inscricoes/'
+      path: '/'
+      fullPath: '/inscricoes/'
+      preLoaderRoute: typeof InscricoesIndexRouteImport
+      parentRoute: typeof InscricoesRoute
+    }
+    '/inscricoes/$id': {
+      id: '/inscricoes/$id'
+      path: '/$id'
+      fullPath: '/inscricoes/$id'
+      preLoaderRoute: typeof InscricoesIdRouteImport
+      parentRoute: typeof InscricoesRoute
+    }
+    '/vagas/': {
+      id: '/vagas/'
+      path: '/vagas'
+      fullPath: '/vagas/'
+      preLoaderRoute: typeof VagasIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vagas/$id': {
+      id: '/vagas/$id'
+      path: '/vagas/$id'
+      fullPath: '/vagas/$id'
+      preLoaderRoute: typeof VagasIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/votacoes/': {
+      id: '/votacoes/'
+      path: '/'
+      fullPath: '/votacoes/'
+      preLoaderRoute: typeof VotacoesIndexRouteImport
+      parentRoute: typeof VotacoesRoute
+    }
+    '/votacoes/$id': {
+      id: '/votacoes/$id'
+      path: '/$id'
+      fullPath: '/votacoes/$id'
+      preLoaderRoute: typeof VotacoesIdRouteImport
+      parentRoute: typeof VotacoesRoute
+    }
+    '/_authenticated/painel/': {
+      id: '/_authenticated/painel/'
+      path: '/'
+      fullPath: '/painel/'
+      preLoaderRoute: typeof AuthenticatedPainelIndexRouteImport
+      parentRoute: typeof AuthenticatedPainelRoute
+    }
+    '/_authenticated/painel/agenda': {
+      id: '/_authenticated/painel/agenda'
+      path: '/agenda'
+      fullPath: '/painel/agenda'
+      preLoaderRoute: typeof AuthenticatedPainelAgendaRouteImport
+      parentRoute: typeof AuthenticatedPainelRoute
+    }
+    '/_authenticated/painel/auditoria': {
+      id: '/_authenticated/painel/auditoria'
+      path: '/auditoria'
+      fullPath: '/painel/auditoria'
+      preLoaderRoute: typeof AuthenticatedPainelAuditoriaRouteImport
+      parentRoute: typeof AuthenticatedPainelRoute
+    }
+    '/_authenticated/painel/comunicados': {
+      id: '/_authenticated/painel/comunicados'
+      path: '/comunicados'
+      fullPath: '/painel/comunicados'
+      preLoaderRoute: typeof AuthenticatedPainelComunicadosRouteImport
+      parentRoute: typeof AuthenticatedPainelRoute
+    }
+    '/_authenticated/painel/desligamentos': {
+      id: '/_authenticated/painel/desligamentos'
+      path: '/desligamentos'
+      fullPath: '/painel/desligamentos'
+      preLoaderRoute: typeof AuthenticatedPainelDesligamentosRouteImport
+      parentRoute: typeof AuthenticatedPainelRoute
+    }
+    '/_authenticated/painel/equipe': {
+      id: '/_authenticated/painel/equipe'
+      path: '/equipe'
+      fullPath: '/painel/equipe'
+      preLoaderRoute: typeof AuthenticatedPainelEquipeRouteImport
+      parentRoute: typeof AuthenticatedPainelRoute
+    }
+    '/_authenticated/painel/formularios': {
+      id: '/_authenticated/painel/formularios'
+      path: '/formularios'
+      fullPath: '/painel/formularios'
+      preLoaderRoute: typeof AuthenticatedPainelFormulariosRouteImport
+      parentRoute: typeof AuthenticatedPainelRoute
+    }
+    '/_authenticated/painel/inscricoes': {
+      id: '/_authenticated/painel/inscricoes'
+      path: '/inscricoes'
+      fullPath: '/painel/inscricoes'
+      preLoaderRoute: typeof AuthenticatedPainelInscricoesRouteImport
+      parentRoute: typeof AuthenticatedPainelRoute
+    }
+    '/_authenticated/painel/mensagens': {
+      id: '/_authenticated/painel/mensagens'
+      path: '/mensagens'
+      fullPath: '/painel/mensagens'
+      preLoaderRoute: typeof AuthenticatedPainelMensagensRouteImport
+      parentRoute: typeof AuthenticatedPainelRoute
+    }
+    '/_authenticated/painel/permissoes': {
+      id: '/_authenticated/painel/permissoes'
+      path: '/permissoes'
+      fullPath: '/painel/permissoes'
+      preLoaderRoute: typeof AuthenticatedPainelPermissoesRouteImport
+      parentRoute: typeof AuthenticatedPainelRoute
+    }
+    '/_authenticated/painel/relatorios': {
+      id: '/_authenticated/painel/relatorios'
+      path: '/relatorios'
+      fullPath: '/painel/relatorios'
+      preLoaderRoute: typeof AuthenticatedPainelRelatoriosRouteImport
+      parentRoute: typeof AuthenticatedPainelRoute
+    }
+    '/_authenticated/painel/termos': {
+      id: '/_authenticated/painel/termos'
+      path: '/termos'
+      fullPath: '/painel/termos'
+      preLoaderRoute: typeof AuthenticatedPainelTermosRouteImport
+      parentRoute: typeof AuthenticatedPainelRoute
+    }
+    '/_authenticated/painel/vagas': {
+      id: '/_authenticated/painel/vagas'
+      path: '/vagas'
+      fullPath: '/painel/vagas'
+      preLoaderRoute: typeof AuthenticatedPainelVagasRouteImport
+      parentRoute: typeof AuthenticatedPainelRoute
+    }
+    '/_authenticated/painel/votacoes': {
+      id: '/_authenticated/painel/votacoes'
+      path: '/votacoes'
+      fullPath: '/painel/votacoes'
+      preLoaderRoute: typeof AuthenticatedPainelVotacoesRouteImport
+      parentRoute: typeof AuthenticatedPainelRoute
+    }
+    '/vagas/$id_/candidatura': {
+      id: '/vagas/$id_/candidatura'
+      path: '/vagas/$id/candidatura'
+      fullPath: '/vagas/$id/candidatura'
+      preLoaderRoute: typeof VagasIdCandidaturaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vagas/$id_/termos': {
+      id: '/vagas/$id_/termos'
+      path: '/vagas/$id/termos'
+      fullPath: '/vagas/$id/termos'
+      preLoaderRoute: typeof VagasIdTermosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface AuthenticatedPainelRouteChildren {
+  AuthenticatedPainelAgendaRoute: typeof AuthenticatedPainelAgendaRoute
+  AuthenticatedPainelAuditoriaRoute: typeof AuthenticatedPainelAuditoriaRoute
+  AuthenticatedPainelComunicadosRoute: typeof AuthenticatedPainelComunicadosRoute
+  AuthenticatedPainelDesligamentosRoute: typeof AuthenticatedPainelDesligamentosRoute
+  AuthenticatedPainelEquipeRoute: typeof AuthenticatedPainelEquipeRoute
+  AuthenticatedPainelFormulariosRoute: typeof AuthenticatedPainelFormulariosRoute
+  AuthenticatedPainelInscricoesRoute: typeof AuthenticatedPainelInscricoesRoute
+  AuthenticatedPainelMensagensRoute: typeof AuthenticatedPainelMensagensRoute
+  AuthenticatedPainelPermissoesRoute: typeof AuthenticatedPainelPermissoesRoute
+  AuthenticatedPainelRelatoriosRoute: typeof AuthenticatedPainelRelatoriosRoute
+  AuthenticatedPainelTermosRoute: typeof AuthenticatedPainelTermosRoute
+  AuthenticatedPainelVagasRoute: typeof AuthenticatedPainelVagasRoute
+  AuthenticatedPainelVotacoesRoute: typeof AuthenticatedPainelVotacoesRoute
+  AuthenticatedPainelIndexRoute: typeof AuthenticatedPainelIndexRoute
+}
+
+const AuthenticatedPainelRouteChildren: AuthenticatedPainelRouteChildren = {
+  AuthenticatedPainelAgendaRoute: AuthenticatedPainelAgendaRoute,
+  AuthenticatedPainelAuditoriaRoute: AuthenticatedPainelAuditoriaRoute,
+  AuthenticatedPainelComunicadosRoute: AuthenticatedPainelComunicadosRoute,
+  AuthenticatedPainelDesligamentosRoute: AuthenticatedPainelDesligamentosRoute,
+  AuthenticatedPainelEquipeRoute: AuthenticatedPainelEquipeRoute,
+  AuthenticatedPainelFormulariosRoute: AuthenticatedPainelFormulariosRoute,
+  AuthenticatedPainelInscricoesRoute: AuthenticatedPainelInscricoesRoute,
+  AuthenticatedPainelMensagensRoute: AuthenticatedPainelMensagensRoute,
+  AuthenticatedPainelPermissoesRoute: AuthenticatedPainelPermissoesRoute,
+  AuthenticatedPainelRelatoriosRoute: AuthenticatedPainelRelatoriosRoute,
+  AuthenticatedPainelTermosRoute: AuthenticatedPainelTermosRoute,
+  AuthenticatedPainelVagasRoute: AuthenticatedPainelVagasRoute,
+  AuthenticatedPainelVotacoesRoute: AuthenticatedPainelVotacoesRoute,
+  AuthenticatedPainelIndexRoute: AuthenticatedPainelIndexRoute,
+}
+
+const AuthenticatedPainelRouteWithChildren =
+  AuthenticatedPainelRoute._addFileChildren(AuthenticatedPainelRouteChildren)
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedPainelRoute: typeof AuthenticatedPainelRouteWithChildren
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedPainelRoute: AuthenticatedPainelRouteWithChildren,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
+interface InscricoesRouteChildren {
+  InscricoesIdRoute: typeof InscricoesIdRoute
+  InscricoesIndexRoute: typeof InscricoesIndexRoute
+}
+
+const InscricoesRouteChildren: InscricoesRouteChildren = {
+  InscricoesIdRoute: InscricoesIdRoute,
+  InscricoesIndexRoute: InscricoesIndexRoute,
+}
+
+const InscricoesRouteWithChildren = InscricoesRoute._addFileChildren(
+  InscricoesRouteChildren,
+)
+
+interface VotacoesRouteChildren {
+  VotacoesIdRoute: typeof VotacoesIdRoute
+  VotacoesIndexRoute: typeof VotacoesIndexRoute
+}
+
+const VotacoesRouteChildren: VotacoesRouteChildren = {
+  VotacoesIdRoute: VotacoesIdRoute,
+  VotacoesIndexRoute: VotacoesIndexRoute,
+}
+
+const VotacoesRouteWithChildren = VotacoesRoute._addFileChildren(
+  VotacoesRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AcompanharRoute: AcompanharRoute,
+  AgendaRoute: AgendaRoute,
+  AuthRoute: AuthRoute,
+  ComunicadosRoute: ComunicadosRoute,
+  ContatoRoute: ContatoRoute,
+  DocumentoRoute: DocumentoRoute,
+  InscricoesRoute: InscricoesRouteWithChildren,
+  PrivacidadeRoute: PrivacidadeRoute,
+  RegulamentosRoute: RegulamentosRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
+  SobreRoute: SobreRoute,
+  VotacoesRoute: VotacoesRouteWithChildren,
+  DesligamentoTokenRoute: DesligamentoTokenRoute,
+  VagasIdRoute: VagasIdRoute,
+  VagasIndexRoute: VagasIndexRoute,
+  VagasIdCandidaturaRoute: VagasIdCandidaturaRoute,
+  VagasIdTermosRoute: VagasIdTermosRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

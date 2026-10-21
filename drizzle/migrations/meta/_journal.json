@@ -1,0 +1,132 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1792211110523,
+      "tag": "0000_migration",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792211565390,
+      "tag": "0001_migration",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792212044232,
+      "tag": "0002_migration",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792212947503,
+      "tag": "0003_portal_forms_versions_storage_offboarding_reports",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792213617997,
+      "tag": "0004_fix_tracking_lookup_ambiguity",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1792215487953,
+      "tag": "0005_registration_dossiers",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1792215510673,
+      "tag": "0006_submission_document_access",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1792215779749,
+      "tag": "0007_dossier_consent_decisions",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1792215872624,
+      "tag": "0008_pin_displayed_consent_versions",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1792216140618,
+      "tag": "0009_admin_registration_dossiers",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1792216825128,
+      "tag": "0010_fix_offboarding_confirmation",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1792290745576,
+      "tag": "0011_poll_projects_and_candidate_fields",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1792292783854,
+      "tag": "0012_opportunities_terms_consents",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1792293753957,
+      "tag": "0013_fix_consent_digest_schema",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1792380076539,
+      "tag": "0014_poll_candidates_profile_status",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1792555243334,
+      "tag": "0015_fix_submit_opportunity_ambiguity",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1792555343671,
+      "tag": "0016_opportunity_atomic_save_and_bypass_guard",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1792563046783,
+      "tag": "0017_restore_check",
+      "breakpoints": true
+    }
+  ]
+}
