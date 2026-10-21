@@ -1,8 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
-import { Plus, Trash2, Pencil, GripVertical, ChevronUp, ChevronDown, Info, Vote, UserRound, Save, Send, Power, Trophy } from "lucide-react";
+import { Plus, Trash2, Pencil, GripVertical, ChevronUp, ChevronDown, Info, Vote, UserRound, Save, Send, Power, Trophy, Search, AlertCircle, CalendarDays, BarChart3, Eye, CircleStop, Settings2, Infinity as InfinityIcon, Lock, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useLiveQueries } from "@/lib/realtime";
 import { useAuth } from "@/lib/auth";
@@ -23,40 +23,117 @@ import type { Tables } from "@/integrations/supabase/types";
 export const Route = createFileRoute("/_authenticated/painel/votacoes")({ head: () => ({ meta: [{ title: "Votações administrativas — Portal Norte Junino" }, { name: "description", content: "Gerencie votações e candidatos do portal." }, { property: "og:title", content: "Votações administrativas — Portal Norte Junino" }, { property: "og:description", content: "Gerencie votações e candidatos do portal." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }), component: PollsAdmin });
 type Poll = Tables<"polls">;
 
+type PollRow = Poll & { poll_options: { count: number }[]; poll_tallies: { votes: number }[] };
+const STATUS_TONE: Record<PollStatus, string> = {
+  rascunho: "bg-muted text-muted-foreground",
+  agendada: "bg-accent text-accent-foreground",
+  ativa: "bg-success/15 text-success",
+  encerrada: "bg-secondary text-secondary-foreground",
+  cancelada: "bg-destructive/10 text-destructive",
+};
+
 function PollsAdmin() {
+  const qc = useQueryClient();
   const [editing, setEditing] = useState<string | "new" | null>(null);
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState<PollStatus | "todas">("todas");
   const list = useQuery({
     queryKey: ["admin", "polls"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("polls").select("*").order("created_at", { ascending: false }).limit(200);
+      const { data, error } = await supabase.from("polls").select("*, poll_options(count), poll_tallies(votes)").order("created_at", { ascending: false }).limit(200);
       if (error) throw error;
-      return data;
+      return data as unknown as PollRow[];
     },
   });
   const st = useLiveQueries("admin-polls", [
     { table: "polls", keys: [["admin", "polls"], ["admin", "poll"]] },
-    { table: "poll_tallies", keys: [["admin", "poll"]] },
-    { table: "poll_options", keys: [["admin", "poll"]] },
+    { table: "poll_tallies", keys: [["admin", "poll"], ["admin", "polls"]] },
+    { table: "poll_options", keys: [["admin", "poll"], ["admin", "polls"]] },
   ]);
+  const act = useMutation({
+    mutationFn: async ({ p, kind }: { p: PollRow; kind: "encerrar" | "excluir" }) => {
+      if (kind === "encerrar") return guardedUpdate("polls", p.id, p.updated_at, { status: "encerrada" });
+      const { error } = await supabase.from("polls").delete().eq("id", p.id);
+      if (error) throw error;
+      await cleanupImage(p.image_url);
+    },
+    onSuccess: (_d, v) => { toast.success(v.kind === "encerrar" ? "Votação encerrada." : "Votação excluída."); qc.invalidateQueries({ queryKey: ["admin", "polls"] }); },
+    onError: (e) => toast.error(errMsg(e)),
+  });
+  const rows = (list.data ?? []).filter((p) => {
+    const q = search.trim().toLowerCase();
+    if (q && ![p.title, p.category, p.project].some((v) => (v ?? "").toLowerCase().includes(q))) return false;
+    return filter === "todas" || effectivePollStatus(p) === filter;
+  });
   return (
     <div>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-3xl font-extrabold">Votações</h1>
-        <div className="flex items-center gap-3"><LiveBadge status={st} /><Button onClick={() => setEditing("new")}><Plus /> Nova votação</Button></div>
-      </div>
-      <div className="mt-6 grid gap-4">
-        {list.isLoading ? <p className="text-muted-foreground">Carregando…</p> : !list.data?.length ? <p className="text-muted-foreground">Nenhuma votação criada.</p> :
-          list.data.map((p) => (
-            <button key={p.id} onClick={() => setEditing(p.id)} className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-card p-5 text-left shadow-card hover:ring-2 hover:ring-primary/40">
-              <div>
-                <div className="font-bold">{p.title}</div>
-                <div className="text-xs text-muted-foreground">
-                  {p.project && <>{p.project} · </>}{fmtDate(p.starts_at)} — {fmtDate(p.ends_at)} · Resultados: {VISIBILITY[p.results_visibility]}
-                </div>
-              </div>
-              <span className="rounded-full bg-accent px-3 py-1 text-xs font-semibold">{POLL_STATUS[effectivePollStatus(p)]}</span>
+      <header className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-extrabold tracking-tight">Gerenciar votações</h1>
+          <p className="mt-1 max-w-xl text-sm text-muted-foreground">Crie, edite e acompanhe as votações do portal, seus candidatos e resultados.</p>
+        </div>
+        <div className="flex items-center gap-3"><LiveBadge status={st} /><Button size="lg" onClick={() => setEditing("new")}><Plus /> Nova votação</Button></div>
+      </header>
+
+      <div className="mt-6 flex flex-col gap-3 rounded-xl border border-border bg-card p-3 sm:flex-row sm:items-center">
+        <label className="relative flex-1">
+          <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Buscar por nome, projeto ou categoria" className="pl-9" aria-label="Buscar votações" />
+        </label>
+        <div className="flex gap-1.5 overflow-x-auto" role="tablist" aria-label="Filtrar por situação">
+          {(["todas", ...Object.keys(POLL_STATUS)] as (PollStatus | "todas")[]).map((k) => (
+            <button key={k} type="button" role="tab" aria-selected={filter === k} onClick={() => setFilter(k)}
+              className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${filter === k ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:text-foreground"}`}>
+              {k === "todas" ? "Todas" : POLL_STATUS[k]}
             </button>
           ))}
+        </div>
+      </div>
+
+      <div className="mt-5 grid gap-3">
+        {list.isLoading ? (
+          [0, 1, 2].map((i) => <div key={i} className="h-24 animate-pulse rounded-xl bg-muted" />)
+        ) : list.isError ? (
+          <div className="flex flex-col items-center gap-3 rounded-xl border border-destructive/30 bg-destructive/5 p-8 text-center">
+            <AlertCircle className="size-8 text-destructive" />
+            <p className="text-sm">Não foi possível carregar as votações. {errMsg(list.error)}</p>
+            <Button variant="outline" size="sm" onClick={() => list.refetch()}>Tentar novamente</Button>
+          </div>
+        ) : !rows.length ? (
+          <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-border p-10 text-center">
+            <Vote className="size-8 text-muted-foreground" />
+            <p className="font-semibold">{list.data?.length ? "Nenhuma votação encontrada" : "Nenhuma votação criada ainda"}</p>
+            <p className="text-sm text-muted-foreground">{list.data?.length ? "Ajuste a busca ou o filtro." : "Comece criando a primeira votação do portal."}</p>
+            {!list.data?.length && <Button onClick={() => setEditing("new")}><Plus /> Nova votação</Button>}
+          </div>
+        ) : rows.map((p) => {
+          const eff = effectivePollStatus(p);
+          const candidates = p.poll_options?.[0]?.count ?? 0;
+          const votes = (p.poll_tallies ?? []).reduce((a, t) => a + t.votes, 0);
+          return (
+            <article key={p.id} className="flex flex-col gap-4 rounded-xl border border-border bg-card p-4 shadow-card sm:flex-row sm:items-center sm:p-5">
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${STATUS_TONE[eff]}`}>{POLL_STATUS[eff]}</span>
+                  <span className="rounded-full border border-border px-2.5 py-0.5 text-xs text-muted-foreground">{p.single_vote ? "Voto único" : "Votos ilimitados"}</span>
+                </div>
+                <h2 className="mt-2 truncate text-lg font-bold">{p.title}</h2>
+                <p className="mt-0.5 truncate text-xs text-muted-foreground">{[p.project, p.category].filter(Boolean).join(" · ") || "Sem categoria"}</p>
+                <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                  <span className="flex items-center gap-1"><CalendarDays className="size-3.5" />{fmtDate(p.starts_at)} — {fmtDate(p.ends_at)}</span>
+                  <span className="flex items-center gap-1"><UserRound className="size-3.5" />{candidates} candidato(s)</span>
+                  <span className="flex items-center gap-1"><BarChart3 className="size-3.5" />{votes} voto(s)</span>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2 sm:justify-end">
+                <Button size="sm" onClick={() => setEditing(p.id)}><Pencil /> Editar</Button>
+                {p.status !== "rascunho" && <Button size="sm" variant="outline" asChild><Link to="/votacoes/$id" params={{ id: p.id }} target="_blank"><Eye /> Visualizar</Link></Button>}
+                {p.status === "ativa" && <Button size="sm" variant="outline" disabled={act.isPending} onClick={() => confirm(`Encerrar "${p.title}"? Novos votos serão bloqueados.`) && act.mutate({ p, kind: "encerrar" })}><CircleStop /> Encerrar</Button>}
+                {p.status === "rascunho" && votes === 0 && <Button size="sm" variant="ghost" className="text-destructive" disabled={act.isPending} onClick={() => confirm(`Excluir "${p.title}"? Esta ação não pode ser desfeita.`) && act.mutate({ p, kind: "excluir" })}><Trash2 /> Excluir</Button>}
+              </div>
+            </article>
+          );
+        })}
       </div>
       {editing && <PollEditor id={editing === "new" ? null : editing} onClose={() => setEditing(null)} onCreated={(id) => setEditing(id)} />}
     </div>
@@ -84,8 +161,11 @@ function PollEditor({ id, onClose, onCreated }: { id: string | null; onClose: ()
     },
   });
   const p = data.data?.p;
-  const [repeat, setRepeat] = useState<boolean | null>(null);
-  const allowRepeat = repeat ?? p?.allow_repeat_option ?? false;
+  const [singleOverride, setSingleOverride] = useState<boolean | null>(null);
+  const singleVote = singleOverride ?? p?.single_vote ?? true;
+  const [dirty, setDirty] = useState(false);
+  const isDirty = dirty || (singleOverride !== null && singleOverride !== (p?.single_vote ?? true));
+  const close = () => { if (!isDirty || confirm("Há alterações não salvas. Deseja sair mesmo assim?")) onClose(); };
   const [editingOption, setEditingOption] = useState<string | null>(null);
   const [addingCandidate, setAddingCandidate] = useState(false);
   const infoFormRef = useRef<HTMLFormElement | null>(null);
@@ -96,8 +176,6 @@ function PollEditor({ id, onClose, onCreated }: { id: string | null; onClose: ()
       if (fd.has("upload_pending")) throw new Error("Aguarde o envio da imagem antes de salvar.");
       const title = String(fd.get("title")).trim();
       if (title.length < 3) throw new Error("Informe um título.");
-      const vpu = Number(fd.get("votes_per_user"));
-      if (!Number.isInteger(vpu) || vpu < 1 || vpu > 100) throw new Error("Limite de votos entre 1 e 100.");
       const starts = fromLocalInput(fd.get("starts_at")), ends = fromLocalInput(fd.get("ends_at"));
       if (starts && ends && new Date(ends) <= new Date(starts)) throw new Error("O encerramento deve ser após o início.");
       if (publish && !starts) throw new Error("Informe a data de início para publicar.");
@@ -110,10 +188,9 @@ function PollEditor({ id, onClose, onCreated }: { id: string | null; onClose: ()
         rules: String(fd.get("rules") ?? ""),
         starts_at: starts,
         ends_at: ends,
-        votes_per_user: vpu,
         audience: fd.get("audience") as "publica" | "restrita",
         results_visibility: fd.get("results_visibility") as "oculto" | "ao_vivo" | "apos_encerramento",
-        allow_repeat_option: allowRepeat,
+        single_vote: singleVote,
       };
       let pollId = p?.id ?? null;
       if (p) {
@@ -135,7 +212,7 @@ function PollEditor({ id, onClose, onCreated }: { id: string | null; onClose: ()
       }
       return pollId;
     },
-    onSuccess: (newId, vars) => { toast.success(vars.publish ? "Votação publicada." : "Rascunho salvo."); inval(); if (newId && !id) onCreated(newId); },
+    onSuccess: (newId, vars) => { toast.success(vars.publish ? "Votação publicada." : "Alterações salvas."); setDirty(false); setSingleOverride(null); inval(); if (newId && !id) onCreated(newId); },
     onError: (e) => toast.error(errMsg(e)),
   });
 
@@ -242,11 +319,11 @@ function PollEditor({ id, onClose, onCreated }: { id: string | null; onClose: ()
   const locked = p && (p.status === "encerrada" || p.status === "cancelada");
 
   return (
-    <Dialog open onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="theme-light max-h-[90vh] max-w-4xl overflow-y-auto">
+    <Dialog open onOpenChange={(o) => !o && close()}>
+      <DialogContent className="theme-light max-h-[90dvh] max-w-5xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{p ? "Editar votação" : "Nova votação"}</DialogTitle>
-          <p className="text-sm text-muted-foreground">Preencha as informações da votação e adicione os candidatos.</p>
+          <p className="text-sm text-muted-foreground">Configure as informações, os candidatos e o modo de votação.</p>
         </DialogHeader>
         {id && !p ? <p>Carregando…</p> : (
           <div className="space-y-6">
@@ -262,8 +339,8 @@ function PollEditor({ id, onClose, onCreated }: { id: string | null; onClose: ()
             )}
 
             {/* 1. Informações da votação */}
-            <form ref={infoFormRef} key={p?.updated_at ?? "new"} onSubmit={(e) => e.preventDefault()} className="rounded-xl border border-border bg-card p-5 shadow-card">
-              <h2 className="flex items-center gap-2 text-lg font-extrabold"><Vote className="size-5 text-primary" /> 1. Informações da votação</h2>
+            <form ref={infoFormRef} key={p?.updated_at ?? "new"} onChange={() => setDirty(true)} onSubmit={(e) => e.preventDefault()} className="rounded-xl border border-border bg-card p-5 shadow-card">
+              <h2 className="flex items-center gap-2 text-lg font-extrabold"><Vote className="size-5 text-primary" /> Informações da votação</h2>
               <fieldset disabled={!!locked} className="mt-5 space-y-4">
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-1.5"><Label>Projeto</Label><Input name="project" defaultValue={p?.project} placeholder="Ex.: Estrela de São João" maxLength={120} /></div>
@@ -285,20 +362,38 @@ function PollEditor({ id, onClose, onCreated }: { id: string | null; onClose: ()
                   <div className="space-y-1.5"><Label>Data de encerramento</Label><Input name="ends_at" type="datetime-local" defaultValue={toLocalInput(p?.ends_at)} /></div>
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-1.5"><Label>Votos por participante</Label><Input name="votes_per_user" type="number" min={1} max={100} defaultValue={p?.votes_per_user ?? 1} /></div>
                   <div className="space-y-1.5"><Label>Público</Label>
                     <select name="audience" defaultValue={p?.audience ?? "publica"} className={selectCls}><option value="publica">Pública (contas cadastradas)</option><option value="restrita">Restrita (lista de e-mails)</option></select>
                   </div>
                 </div>
-                <label className="flex items-center gap-2 text-sm"><Switch checked={allowRepeat} onCheckedChange={setRepeat} /> Permitir votar mais de uma vez no mesmo candidato</label>
               </fieldset>
             </form>
+
+            {/* Configuração de votos */}
+            <section className="rounded-xl border border-border bg-card p-5 shadow-card">
+              <h2 className="flex items-center gap-2 text-lg font-extrabold"><Settings2 className="size-5 text-primary" /> Configuração de votos</h2>
+              <div className="mt-4 flex items-start justify-between gap-4 rounded-lg border border-border bg-muted/40 p-4">
+                <div className="flex items-start gap-3">
+                  <span className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">{singleVote ? <Lock className="size-4" /> : <InfinityIcon className="size-4" />}</span>
+                  <div>
+                    <Label htmlFor="single-vote" className="text-base font-bold">Permitir votos ilimitados</Label>
+                    <p className="mt-1 text-sm text-muted-foreground" aria-live="polite">
+                      {singleVote
+                        ? "Voto único: cada participante poderá registrar apenas um voto nesta votação."
+                        : "Votos ilimitados: cada participante poderá votar quantas vezes quiser, inclusive no mesmo candidato."}
+                    </p>
+                  </div>
+                </div>
+                <Switch id="single-vote" checked={singleVote} disabled={!!locked} onCheckedChange={setSingleOverride} />
+              </div>
+              {p && singleOverride !== null && singleOverride !== p.single_vote && <p className="mt-2 text-xs text-muted-foreground">A nova regra vale para os votos registrados após salvar. Votos já registrados são mantidos.</p>}
+            </section>
 
             {/* 2. Candidatos da votação */}
             {p && (
               <section className="rounded-xl border border-border bg-card p-5 shadow-card">
                 <div className="flex flex-wrap items-center justify-between gap-3">
-                  <h2 className="flex items-center gap-2 text-lg font-extrabold"><UserRound className="size-5 text-primary" /> 2. Candidatos da votação</h2>
+                  <h2 className="flex items-center gap-2 text-lg font-extrabold"><UserRound className="size-5 text-primary" /> Candidatos ({data.data?.o.length ?? 0})</h2>
                   {!locked && (
                     <Button size="sm" onClick={() => { setAddingCandidate((v) => !v); setEditingOption(null); }}>
                       <Plus /> Adicionar candidato
@@ -432,8 +527,11 @@ function PollEditor({ id, onClose, onCreated }: { id: string | null; onClose: ()
 
             {/* Botões de ação */}
             {!locked && (
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <Button type="button" variant="outline" onClick={() => onClose()}>Cancelar</Button>
+              <div className="sticky bottom-0 -mx-6 -mb-6 flex flex-wrap items-center justify-between gap-3 border-t border-border bg-card/95 px-6 py-4 backdrop-blur">
+                <div className="flex items-center gap-3">
+                  <Button type="button" variant="outline" onClick={close}>Cancelar</Button>
+                  {isDirty && <span className="text-xs font-medium text-muted-foreground">Alterações não salvas</span>}
+                </div>
                 <div className="flex gap-3">
                   <Button
                     variant="secondary"
@@ -442,7 +540,7 @@ function PollEditor({ id, onClose, onCreated }: { id: string | null; onClose: ()
                       if (infoFormRef.current) save.mutate({ fd: new FormData(infoFormRef.current), publish: false });
                     }}
                   >
-                    <Save /> {save.isPending ? "Salvando…" : "Salvar rascunho"}
+                    {save.isPending ? <Loader2 className="animate-spin" /> : <Save />} {save.isPending ? "Salvando…" : "Salvar alterações"}
                   </Button>
                   <Button
                     disabled={save.isPending}
