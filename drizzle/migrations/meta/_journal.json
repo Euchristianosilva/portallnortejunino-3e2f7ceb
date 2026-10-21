@@ -127,6 +127,13 @@
       "when": 1792563046783,
       "tag": "0017_restore_check",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1792563394723,
+      "tag": "0018_poll_single_vote_mode",
+      "breakpoints": true
     }
   ]
 }
