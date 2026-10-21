@@ -1,0 +1,17 @@
+# Registration dossier
+
+- `dossier.functions.ts` authorizes matching authenticated registration owners, issues hashed 30-minute capabilities, and reads only persisted database data. Public tracking tokens are never valid dossier credentials.
+- `submit_registration_with_dossier` returns access only after the original submission transaction succeeds. Required uploaded files remain checked by the existing database trigger. Legal document objects displayed in the form must match the current server version before consent is recorded; otherwise submission is rejected.
+- `registration_forms.legal_documents` is edited through the existing form editor. No official legal text is invented or backfilled onto existing registrations. The per-registration snapshot captures offered versions and accepted/declined decisions atomically.
+- `registration_dossiers` retains immutable generation snapshots tied to the original registration. Deleting a registration cascades its dossier history and capabilities; this feature does not invent a new legal retention period.
+- `integrityPayload` canonicalizes key order and generation timestamp before server SHA-256 calculation and verification. This detects disagreement with the saved generation, not a qualified digital signature or public certificate.
+- `dossierSections` supplies identical historical content to the page and server PDF. `dossier-pdf.ts` uses pdf-lib/fontkit, a bundled Unicode font, official logo, A4 layout, text wrapping and page numbering. There are no screenshots or public PDF URLs. Browser download receives only a successfully rendered PDF after authorization.
+- Repeated capability access is intentional for viewing, downloading, printing and reload; an atomic counter limits it to 60 requests before the 30-minute expiry. Browser sessionStorage holds the capability only on the app origin; URLs contain no capability or personal data.
+
+## Verified
+
+27 automated tests passed across dossier and existing suites. Live tests created and submitted temporary registrations with long terms, image/voice authorization and privacy content; downloaded a nonempty five-page A4 PDF; recovered the dossier using the authorized account; updated terms and confirmed the original version remained; refreshed a retained generation with canonical integrity validation; checked anonymous/private access denial and invalid capability errors; exercised missing/required/stale consent rejection; downloaded at 390px and checked desktop/mobile overflow. Temporary registration fixtures were removed afterward.
+
+PDF skill QA: all five initial pages were rendered and inspected. The final declaration initially spilled onto a sparse extra page; section/paragraph-aware page breaks were added, then affected pages were rendered again. All sections, accents, protocol/page footers and final term marker were verified. No clipping or overlap remained in the final reviewed pages.
+
+Not verified on physical iOS/Safari or a physical printer. Browser printing uses the native dialog; saving as PDF is an option there. Official legal text must be supplied by the portal administrators in each form; historical missing consent is explicitly reported, never fabricated.

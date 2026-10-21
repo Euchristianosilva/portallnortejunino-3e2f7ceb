@@ -1,0 +1,3 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { Team } from "./painel.equipe";
+export const Route = createFileRoute("/_authenticated/painel/permissoes")({head:()=>({meta:[{title:"Permissões — Portal Norte Junino"},{name:"description",content:"Gerencie os acessos administrativos da equipe."},{property:"og:title",content:"Permissões — Portal Norte Junino"},{property:"og:description",content:"Atribuição segura de permissões administrativas."},{property:"og:type",content:"website"},{name:"twitter:card",content:"summary"}]}),component:Team});

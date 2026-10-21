@@ -1,0 +1,19 @@
+import { describe,it,expect } from "vitest";
+import { dossierSections, type Dossier } from "@/lib/dossier";
+import { makeDossierPdf } from "@/lib/dossier-pdf";
+import { PDFDocument } from "pdf-lib";
+import { integrityPayload } from "@/lib/dossier-integrity";
+import { z } from "zod";
+
+const fixture=():Dossier=>({id:"0a5d34f4-7a1e-4993-a358-06b65f507a0f",generated_at:"2026-10-17T05:00:00Z",hash:"abc",snapshot:{protocol:"1234",full_name:"João Conceição",email:"joao@example.org",title:"Inscrição cultural",category:"Dança",created_at:"2026-10-16T10:00:00Z",updated_at:"2026-10-16T10:00:00Z",status:"recebida",form_version:1,fields:[{key:"cidade",label:"Município",type:"text",required:false}],answers:{cidade:"São Luís"},consents:[{id:"termos",title:"Termos",kind:"terms",version:"1",published_at:"2026-10-01T00:00:00Z",content:"Cláusula original: autorização, participação e proteção.",required:true,agreed:true,accepted_at:"2026-10-16T10:00:00Z"}],original:null}});
+describe("Dossiê individual",()=>{
+ it("aceita protocolo numérico de URL sem quebrar o acompanhamento",()=>{expect(z.coerce.string().parse(1234)).toBe("1234");expect(z.coerce.string().parse("0034")).toBe("0034");});
+ it("integridade independe da ordem das chaves retornadas pelo banco",()=>{const d=fixture();const other={...d,generated_at:"2026-10-17T05:00:00+00:00",snapshot:{...d.snapshot,answers:{cidade:"São Luís"}}};expect(integrityPayload(d)).toBe(integrityPayload(other));other.snapshot.answers.cidade="Valor adulterado";expect(integrityPayload(d)).not.toBe(integrityPayload(other));});
+ it("preserva texto integral da versão aceita",()=>{const d=fixture();expect(dossierSections(d)[2]?.text).toContain(d.snapshot.consents[0]?.content);expect(dossierSections(d)[2]?.text).toContain("Versão 1");});
+ it("não presume autorização de imagem ausente",()=>{expect(dossierSections(fixture())[3]?.text).toContain("Nenhuma autorização é presumida");});
+ it("não inclui documento opcional recusado",()=>{const d=fixture();d.snapshot.consents.push({...d.snapshot.consents[0],id:"imagem",title:"Imagem",kind:"image",agreed:false,content:"NÃO DEVE APARECER"} as Dossier["snapshot"]["consents"][number]);expect(dossierSections(d)[3]?.text).not.toContain("NÃO DEVE APARECER");});
+ it("identifica campos ausentes sem inventar valores",()=>{const d=fixture();d.snapshot.answers={};expect(dossierSections(d)[1]?.text).toContain("Não informado");});
+ it("não expõe caminho interno de anexo",()=>{const d=fixture();d.snapshot.fields=[{key:"arquivo",label:"Anexo",type:"file",required:true}];d.snapshot.answers={arquivo:"user-id/private.pdf"};expect(dossierSections(d)[1]?.text).not.toContain("user-id");});
+ it("distingue valores atuais de originais",()=>{const d=fixture();d.snapshot.original={full_name:"Nome original",email:"original@example.org",answers:{cidade:"Belém"},title:"Inscrição",category:"Dança",created_at:d.snapshot.created_at};expect(dossierSections(d)[1]?.text).toContain("Nome original");expect(dossierSections(d)[1]?.text).toContain("São Luís");expect(dossierSections(d)[1]?.text).toContain("Belém");});
+ it("gera A4 multipágina com termos longos e acentos",async()=>{const d=fixture();const consent=d.snapshot.consents[0];if(consent)consent.content="São Luís: participação, proteção, ação e voz.\n".repeat(180)+"FIM INTEGRAL DOS TERMOS";const sections=dossierSections(d);expect(sections[2]?.text).toContain("FIM INTEGRAL DOS TERMOS");const bytes=await makeDossierPdf(d);const pdf=await PDFDocument.load(bytes);expect(pdf.getPageCount()).toBeGreaterThan(3);expect(pdf.getPage(0).getWidth()).toBeCloseTo(595.28);expect(bytes.byteLength).toBeGreaterThan(1000);},30000);
+});
