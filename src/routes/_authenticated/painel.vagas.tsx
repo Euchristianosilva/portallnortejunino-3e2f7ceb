@@ -185,7 +185,7 @@ function OppEditor({ opp, onClose }: { opp: Opportunity | null; onClose: () => v
 
   const busy = save.isPending || del.isPending;
   function close() { if (!busy && (!dirty || confirm("Descartar as alterações não salvas?"))) onClose(); }
-  const blocked = busy || (!!opp && !linksLoaded) || docs.isLoading || docs.isError || existingLinks.isError;
+  const blocked = busy || (!!opp && !linksLoaded) || docs.isLoading || docs.isError || existingLinks.isError || forms.isLoading || forms.isError;
   return (
     <Dialog open onOpenChange={(o) => !o && close()}>
       <DialogContent className="theme-light flex max-h-[90dvh] w-[calc(100%-1.5rem)] max-w-4xl flex-col gap-0 overflow-hidden rounded-lg bg-card p-0" onEscapeKeyDown={e => { if (busy) e.preventDefault(); }} onPointerDownOutside={e => e.preventDefault()}>
@@ -210,6 +210,20 @@ function OppEditor({ opp, onClose }: { opp: Opportunity | null; onClose: () => v
             </div>
             <div className="space-y-1.5"><Label>Rótulo da modalidade</Label><Input name="modality_label" defaultValue={opp?.modality_label} placeholder="Ex.: Participação voluntária" maxLength={120} /></div>
             <div className="space-y-1.5 sm:col-span-2"><Label>Projeto, departamento ou iniciativa</Label><Input name="project" defaultValue={opp?.project} maxLength={150} /></div>
+            <div className="space-y-1.5 sm:col-span-2">
+              <Label htmlFor="opp-form">Formulário de inscrição</Label>
+              {forms.isError ? (
+                <p role="alert" className="text-sm text-destructive">Não foi possível carregar os formulários. <Button type="button" variant="outline" size="sm" onClick={() => forms.refetch()}>Tentar novamente</Button></p>
+              ) : (
+                <select id="opp-form" aria-label="Formulário de inscrição" className="h-9 w-full rounded-md border border-input bg-card px-2 text-sm" value={forms.data?.some((f) => f.id === formId) ? formId : ""} onChange={(e) => { setFormId(e.target.value); setDirty(true); }} disabled={busy || forms.isLoading}>
+                  <option value="">Cadastro padrão da vaga (nome, e-mail e termos)</option>
+                  {(forms.data ?? []).map((f) => <option key={f.id} value={f.id}>{f.title}{f.category ? ` — ${f.category}` : ""} · {f.published ? "Publicado" : "Rascunho"}</option>)}
+                </select>
+              )}
+              <p className="text-xs text-muted-foreground">
+                {forms.data?.length ? "A candidatura pública usará os campos e requisitos do formulário selecionado. Somente formulários publicados podem ser usados em vagas publicadas." : "Nenhum formulário cadastrado ainda."} Gerencie em <Link to="/painel/formularios" className="font-semibold text-primary underline">Formulários</Link>.
+              </p>
+            </div>
           </div>
           <h3 className="flex items-center gap-2 border-t border-border pt-5 text-base font-bold"><FileText className="size-4 text-primary" />2. Sobre a vaga</h3>
           <div className="space-y-1.5"><Label htmlFor="opp-description">Descrição completa{status === "publicada" ? " *" : " (opcional no rascunho)"}</Label><Textarea id="opp-description" name="description" required={status === "publicada"} defaultValue={opp?.description} rows={4} maxLength={5000} /></div>

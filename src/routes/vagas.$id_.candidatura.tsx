@@ -96,7 +96,7 @@ function CandidacyPage() {
     );
 
   const f = form.data;
-  if (!f) return <SiteShell><div className="mx-auto max-w-3xl px-5 py-20"><EmptyState title="Formulário indisponível" text="Esta vaga ainda não possui um formulário associado." /></div></SiteShell>;
+  if (!f || !f.published) return <SiteShell><div className="mx-auto max-w-3xl px-5 py-20"><EmptyState title="Formulário indisponível" text="Esta vaga não possui um formulário de inscrição disponível no momento." /></div></SiteShell>;
   const fields = (f.fields as unknown as FormField[]) ?? [];
 
   // Formulários que exigem conta: orienta o login antes do preenchimento,
