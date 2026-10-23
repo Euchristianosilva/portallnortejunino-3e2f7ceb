@@ -183,7 +183,8 @@ function OppEditor({ opp, onClose }: { opp: Opportunity | null; onClose: () => v
           <DialogDescription>Dados da oportunidade · campos com * são obrigatórios</DialogDescription>
         </DialogHeader>
         <form onChange={() => setDirty(true)} onSubmit={(e) => { e.preventDefault(); if (submitLock.current || blocked) return; submitLock.current = true; setInlineError(""); save.mutate(new FormData(e.currentTarget)); }} className="flex min-h-0 flex-1 flex-col">
-          <fieldset disabled={busy} className="min-h-0 min-w-0 w-full flex-1 space-y-6 overflow-y-auto overscroll-contain px-5 py-6 sm:px-7">
+          <div className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain">
+          <fieldset disabled={busy} className="min-w-0 w-full space-y-6 px-5 py-6 sm:px-7">
           {existingLinks.isError && <p role="alert" className="text-sm text-destructive">Não foi possível carregar os termos desta vaga. <Button type="button" variant="outline" onClick={() => existingLinks.refetch()}>Tentar novamente</Button></p>}
           <h3 className="flex items-center gap-2 text-base font-bold"><Briefcase className="size-4 text-primary" />1. Identificação da oportunidade</h3>
           <div className="grid gap-4 sm:grid-cols-2">
@@ -262,6 +263,7 @@ function OppEditor({ opp, onClose }: { opp: Opportunity | null; onClose: () => v
             )}
           </div>
           </fieldset>
+          </div>
           <div className="shrink-0 border-t border-border bg-card px-5 py-4 sm:px-7">
             {inlineError && <p role="alert" className="mb-3 text-sm text-destructive">{inlineError}</p>}
             <div className="flex flex-wrap items-center justify-between gap-3">
