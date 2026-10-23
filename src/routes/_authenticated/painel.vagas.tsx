@@ -114,6 +114,8 @@ function OppEditor({ opp, onClose }: { opp: Opportunity | null; onClose: () => v
   const save = useMutation({
     mutationFn: async (fd: FormData) => {
       if (fd.has("upload_pending")) throw new Error("Aguarde o envio da imagem antes de salvar.");
+      if (status === "publicada" && !links.length) throw new Error("Para publicar, vincule ao menos um termo ou documento à vaga.");
+      if (status === "publicada" && links.some(l => !docs.data?.versions.find(v => v.id === l.version_id)?.published)) throw new Error("Para publicar, todos os termos vinculados precisam estar com a versão publicada.");
       const title = String(fd.get("title") ?? "").trim();
       if (title.length < 3) throw new Error("Informe o título da vaga.");
       const values = {
@@ -147,7 +149,7 @@ function OppEditor({ opp, onClose }: { opp: Opportunity | null; onClose: () => v
         _values: { ...values, seats: values.seats === null ? "" : String(values.seats) },
         _links: keep,
       });
-      if (error) throw error;
+      if (error) throw new Error(error.code === "P0001" ? error.message : errMsg(error));
       if (opp?.image_url && opp.image_url !== values.image_url) await cleanupImage(opp.image_url).catch(() => undefined);
     },
     onSuccess: () => { toast.success(status === "publicada" ? "Vaga publicada." : "Vaga salva."); qc.invalidateQueries({ queryKey: ["admin", "opportunities"] }); qc.invalidateQueries({ queryKey: ["opportunities"] }); if (opp) qc.invalidateQueries({ queryKey: ["opportunity", opp.id] }); onClose(); },
