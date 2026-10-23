@@ -114,7 +114,7 @@ function OppEditor({ opp, onClose }: { opp: Opportunity | null; onClose: () => v
   const save = useMutation({
     mutationFn: async (fd: FormData) => {
       if (fd.has("upload_pending")) throw new Error("Aguarde o envio da imagem antes de salvar.");
-      if (status === "publicada" && !links.length) throw new Error("Para publicar, vincule ao menos um termo ou documento à vaga.");
+      if (status === "publicada" && !links.length) throw new Error("É necessário vincular ao menos um termo ou documento à vaga para publicar.");
       if (status === "publicada" && links.some(l => !docs.data?.versions.find(v => v.id === l.version_id)?.published)) throw new Error("Para publicar, todos os termos vinculados precisam estar com a versão publicada.");
       const title = String(fd.get("title") ?? "").trim();
       if (title.length < 3) throw new Error("Informe o título da vaga.");
