@@ -134,6 +134,13 @@
       "when": 1792563394723,
       "tag": "0018_poll_single_vote_mode",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1792727765645,
+      "tag": "0019_fix_storage_image_policies_column_shadowing",
+      "breakpoints": true
     }
   ]
 }
