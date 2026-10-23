@@ -10,6 +10,8 @@
 <!-- LOVABLE:END -->
 
 ## Architecture rules
+- Opportunity geography uses the validated states array, with known legacy locations mapped on migration; empty geography never implies nationwide reach.
+- New opportunities automatically own an internal candidacy schema, hidden from standalone form lists, to reuse immutable registration/dossier snapshots without manual form association; existing linked forms and their rules remain intact.
 - Registration dossiers use immutable database consent/submission snapshots and retained generation records; private short-lived hashed capabilities or a verified matching account authorize access, never public tracking tokens. PDF and web sections derive from the same saved generation.
 - Dossier capabilities permit bounded repeated retrieval for preview, download and printing until expiry; every request increments an atomic database counter, and saved generations are checked against canonical SHA-256 data before reuse.
 - Administrative dossiers require an authenticated registrations-permission RPC before privileged reads, share the candidate source and generation pipeline, and audit only action/registration/generation identifiers; this preserves isolation and avoids duplicating consent logic.

@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 export interface Opportunity {
   id: string; title: string; category: string; modality: string; modality_label: string;
   project: string; description: string; activities: string; requirements: string; profile: string;
-  seats: number | null; state: string; city: string; dedication: string; benefits: string;
+  seats: number | null; state: string; states?: string[]; city: string; dedication: string; benefits: string;
   selection_criteria: string; opens_at: string | null; closes_at: string | null;
   status: "rascunho" | "publicada" | "pausada" | "encerrada" | "arquivada";
   image_url: string | null; form_id: string | null; created_at: string; updated_at: string;
