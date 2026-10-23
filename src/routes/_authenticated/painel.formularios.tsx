@@ -30,7 +30,7 @@ function FormsAdmin() {
   const list = useQuery({
     queryKey: ["admin", "forms"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("registration_forms").select("*").order("created_at", { ascending: false }).limit(200);
+      const { data, error } = await supabase.from("registration_forms").select("*").eq("opportunity_managed", false).order("created_at", { ascending: false }).limit(200);
       if (error) throw error;
       return data;
     },

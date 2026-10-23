@@ -7,6 +7,7 @@ import { opportunityQuery, opportunityOpen, OPP_STATUS } from "@/lib/opportuniti
 import { useLiveQueries } from "@/lib/realtime";
 import { fmtDate } from "@/lib/format";
 import { StoredImage } from "@/components/site/StoredImage";
+import { opportunityLocation } from "@/lib/brazil-states";
 
 export const Route = createFileRoute("/vagas/$id")({
   head: () => ({
@@ -51,7 +52,7 @@ function OpportunityPage() {
           {o.project && <p className="mt-2 text-sm font-semibold text-primary">{o.project}</p>}
           {o.image_url && <StoredImage src={o.image_url} alt={o.title} className="mt-5 max-h-72 w-full rounded-lg object-contain" />}
           <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <div className="rounded-lg border border-border p-3 text-sm"><MapPin className="mb-1 size-4 text-primary" />{[o.city, o.state].filter(Boolean).join(" — ") || "Abrangência a combinar"}</div>
+            <div className="rounded-lg border border-border p-3 text-sm"><MapPin className="mb-1 size-4 text-primary" />{opportunityLocation(o)}</div>
             <div className="rounded-lg border border-border p-3 text-sm"><Users className="mb-1 size-4 text-primary" />{o.seats ? `${o.seats} vaga(s)` : "Vagas conforme seleção"}</div>
             <div className="rounded-lg border border-border p-3 text-sm"><Clock className="mb-1 size-4 text-primary" />{o.dedication || "Disponibilidade descrita nos termos"}</div>
             <div className="rounded-lg border border-border p-3 text-sm"><CalendarX className="mb-1 size-4 text-primary" />{o.closes_at ? `Até ${fmtDate(o.closes_at)}` : "Sem encerramento definido"}</div>

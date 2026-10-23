@@ -449,6 +449,7 @@ export type Database = {
           seats: number | null
           selection_criteria: string
           state: string
+          states: string[]
           status: string
           title: string
           updated_at: string
@@ -475,6 +476,7 @@ export type Database = {
           seats?: number | null
           selection_criteria?: string
           state?: string
+          states?: string[]
           status?: string
           title: string
           updated_at?: string
@@ -501,6 +503,7 @@ export type Database = {
           seats?: number | null
           selection_criteria?: string
           state?: string
+          states?: string[]
           status?: string
           title?: string
           updated_at?: string
@@ -883,6 +886,7 @@ export type Database = {
           image_url: string | null
           legal_documents: Json
           opens_at: string | null
+          opportunity_managed: boolean
           published: boolean
           require_login: boolean
           title: string
@@ -901,6 +905,7 @@ export type Database = {
           image_url?: string | null
           legal_documents?: Json
           opens_at?: string | null
+          opportunity_managed?: boolean
           published?: boolean
           require_login?: boolean
           title: string
@@ -919,6 +924,7 @@ export type Database = {
           image_url?: string | null
           legal_documents?: Json
           opens_at?: string | null
+          opportunity_managed?: boolean
           published?: boolean
           require_login?: boolean
           title?: string
@@ -1210,6 +1216,7 @@ export type Database = {
           seats: number | null
           selection_criteria: string
           state: string
+          states: string[]
           status: string
           title: string
           updated_at: string

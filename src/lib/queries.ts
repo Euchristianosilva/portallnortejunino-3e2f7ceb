@@ -55,6 +55,7 @@ export const formsQuery = () =>
       const { data, error } = await supabase
         .from("registration_forms")
         .select("*")
+        .eq("opportunity_managed", false)
         .eq("published", true)
         .order("created_at", { ascending: false })
         .limit(100);

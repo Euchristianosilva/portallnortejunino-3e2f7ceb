@@ -141,6 +141,20 @@
       "when": 1792727765645,
       "tag": "0019_fix_storage_image_policies_column_shadowing",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1792729241288,
+      "tag": "0020_opportunity_multistate_self_contained_candidacy",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1792729458317,
+      "tag": "0021_cleanup_unused_opportunity_form_versions",
+      "breakpoints": true
     }
   ]
 }
