@@ -26,6 +26,7 @@ export const Route = createFileRoute("/_authenticated/painel/vagas")({
 });
 
 interface DocRow { id: string; title: string; kind: string; active_version: number }
+interface FormOption { id: string; title: string; category: string; published: boolean }
 interface VersionRow { id: string; document_id: string; version: number; title: string; published: boolean }
 interface LinkRow { id: string; document_id: string; version_id: string; required: boolean; image_choice: boolean; position: number }
 
@@ -86,7 +87,16 @@ function OppEditor({ opp, onClose }: { opp: Opportunity | null; onClose: () => v
   const [modality, setModality] = useState(opp?.modality ?? "voluntaria");
   const [links, setLinks] = useState<LinkRow[]>([]);
   const [linksLoaded, setLinksLoaded] = useState(false);
+  const [formId, setFormId] = useState(opp?.form_id ?? "");
 
+  const forms = useQuery({
+    queryKey: ["admin", "forms-select"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("registration_forms").select("id, title, category, published").eq("opportunity_managed", false).order("title");
+      if (error) throw error;
+      return (data ?? []) as FormOption[];
+    },
+  });
   const docs = useQuery({
     queryKey: ["admin", "legal-docs"],
     queryFn: async () => {
