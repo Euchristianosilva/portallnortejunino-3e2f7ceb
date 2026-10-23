@@ -126,6 +126,8 @@ function OppEditor({ opp, onClose }: { opp: Opportunity | null; onClose: () => v
       if (fd.has("upload_pending")) throw new Error("Aguarde o envio da imagem antes de salvar.");
       if (status === "publicada" && !links.length) throw new Error("É necessário vincular ao menos um termo ou documento à vaga para publicar.");
       if (status === "publicada" && links.some(l => !docs.data?.versions.find(v => v.id === l.version_id)?.published)) throw new Error("Para publicar, todos os termos vinculados precisam estar com a versão publicada.");
+      const selectedForm = forms.data?.find((f) => f.id === formId);
+      if (status === "publicada" && formId && !selectedForm?.published) throw new Error("Para publicar, o formulário selecionado precisa estar publicado.");
       const title = String(fd.get("title") ?? "").trim();
       if (title.length < 3) throw new Error("Informe o título da vaga.");
       const values = {
@@ -148,7 +150,7 @@ function OppEditor({ opp, onClose }: { opp: Opportunity | null; onClose: () => v
         closes_at: fromLocalInput(fd.get("closes_at")),
         status,
         image_url: String(fd.get("image_url") ?? "") || null,
-
+        form_id: formId,
       };
       // Uma única operação no servidor salva a vaga e os termos vinculados juntos
       // (tudo ou nada) e valida as condições de publicação.
