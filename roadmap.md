@@ -2,6 +2,8 @@
 
 ## Em andamento
 
+- [ ] Melhorar Nova vaga: reorganizar cadastro, persistir 27 UFs com seleção múltipla, remover associação manual de formulário, ajustar filtros públicos e verificar criação/edição/publicação.
+
 - [ ] Vagas: repetir teste ponta a ponta (aceites → portão → formulário → envio) após correção do digest/schema e radios de imagem; limpar vaga de teste 77697677-b966-4832-9a21-a1b058699bf5.
 - [ ] Vagas: legado /inscricoes/$id deve recusar/redirecionar formulários vinculados a vagas (sem quebrar formulários antigos).
 - [ ] Vagas: restrições de publicação no servidor (campos obrigatórios, formulário publicado, termos publicados).
