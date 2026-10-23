@@ -7,6 +7,7 @@
 - [ ] Vagas: repetir teste ponta a ponta (aceites → portão → formulário → envio) após correção do digest/schema e radios de imagem; limpar vaga de teste 77697677-b966-4832-9a21-a1b058699bf5.
 - [ ] Vagas: legado /inscricoes/$id deve recusar/redirecionar formulários vinculados a vagas (sem quebrar formulários antigos).
 - [x] Vagas: restrições de publicação no servidor (título, descrição, termos publicados, datas válidas); candidatura interna automática sem seletor de formulário.
+- [x] Vagas: seletor "Formulário de inscrição" na edição (formulários reais existentes, com título/categoria/situação), persistência por vaga, publicação só com formulário publicado, remoção da associação, fluxo público testado ponta a ponta (termos → formulário associado → protocolo vinculado) e verificado em celular; dados de teste removidos.
 
 ## Novo pedido — Candidatos nas votações
 
